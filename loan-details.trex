@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest manifest-version="0.1" xmlns="http://www.tableau.com/xml/extension_manifest">
+  <dashboard-extension id="io.github.maureenschley.loan-details" extension-version="1.0.0">
+    <default-locale>en_US</default-locale>
+    <name resource-id="name" />
+    <description>Loan-level details for the selected pivot cell, with a column picker saved in a string parameter.</description>
+    <author name="Maureen Schley" email="maureen.schley@salesforce.com" organization="Salesforce" website="https://maureenschley.github.io/mortgage-pivot-extension/" />
+    <min-api-version>1.4</min-api-version>
+    <source-location>
+      <url>https://maureenschley.github.io/mortgage-pivot-extension/index.html</url>
+    </source-location>
+    <icon />
+    <permissions>
+      <permission>full data</permission>
+    </permissions>
+  </dashboard-extension>
+  <resources>
+    <resource id="name">
+      <text locale="en_US">Loan Details</text>
+    </resource>
+  </resources>
+</manifest>

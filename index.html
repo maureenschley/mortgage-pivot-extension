@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Loan Details</title>
+  <style>
+    body { font: 12px/1.4 -apple-system, "Segoe UI", sans-serif; margin: 8px; color: #222; }
+    h1 { font-size: 14px; margin: 0 0 6px; }
+    #status { color: #555; margin-bottom: 6px; }
+    #status:empty { display: none; }
+    .bar { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+    .bar #summary { flex: 1; }
+    button { font-size: 11px; }
+    #picker { border: 1px solid #ccc; border-radius: 3px; padding: 6px; margin: 6px 0; background: #fafafa; }
+    #export-menu { border: 1px solid #ccc; border-radius: 3px; padding: 6px; margin: 6px 0; background: #fafafa; display: flex; flex-wrap: wrap; gap: 6px; }
+    #export-menu[hidden] { display: none; }
+    .choice { flex: 1 1 180px; text-align: left; padding: 6px 8px; font-size: 11px; line-height: 1.4; }
+    #export-note { flex-basis: 100%; color: #555; }
+    #export-progress { flex-basis: 100%; }
+    .rownum { display: block; margin-top: 8px; }
+    .picker-title { font-weight: 600; margin-top: 8px; }
+    #col-order { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; min-height: 26px; padding: 4px; background: #fff; border: 1px dashed #ccc; border-radius: 3px; }
+    .pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 9px; border-radius: 12px; background: #e3eefb; border: 1px solid #b9d2f0; cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; white-space: nowrap; }
+    .pill:focus { outline: 2px solid #2a6ebb; }
+    .pill.dragging { opacity: 0.4; }
+    .pill.ghost { position: fixed; z-index: 10; pointer-events: none; cursor: grabbing; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+    body.is-dragging { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+    .pill.drop-before { box-shadow: -3px 0 0 #2a6ebb; }
+    .pill.drop-after { box-shadow: 3px 0 0 #2a6ebb; }
+    .pill button { border: 0; background: transparent; padding: 0 4px; cursor: pointer; color: #555; border-radius: 8px; }
+    .pill button:hover { background: #c9ddf5; color: #000; }
+    #col-list { max-height: 180px; overflow: auto; columns: 3; margin-top: 6px; }
+    #col-list label { display: block; white-space: nowrap; }
+    .tag { font-size: 10px; color: #8a4b00; background: #fdf0dc; border-radius: 2px; padding: 0 3px; }
+    #tablewrap { max-height: 420px; overflow: auto; }
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 2px 6px; white-space: nowrap; }
+    th { background: #f0f0f0; position: sticky; top: 0; }
+  </style>
+</head>
+<body>
+  <h1>Loan Details</h1>
+  <div id="status">Starting&hellip;</div>
+
+  <div class="bar">
+    <span id="summary"></span>
+    <button id="prev" disabled>&lsaquo; Prev</button>
+    <button id="next" disabled>Next &rsaquo;</button>
+    <button id="col-toggle">Columns</button>
+    <button id="export-toggle" disabled>Export</button>
+  </div>
+
+  <div id="export-menu" hidden>
+    <button class="choice" data-kind="xlsx"><b>Excel (.xlsx)</b><br>Keeps dates, currency and number formats. IDs and ZIPs stay text.</button>
+    <button class="choice" data-kind="csv"><b>CSV</b><br>Plain values only. Dates are written as yyyy-mm-dd.</button>
+    <button class="choice" data-kind="copy"><b>Copy to clipboard</b><br>Paste straight into Excel. Limited to the first 10,000 loans.</button>
+    <div id="export-note">Exports every loan behind the selected cell, in the columns chosen under Columns.</div>
+    <div id="export-progress" hidden><span id="export-text"></span> <button id="export-cancel">Cancel</button></div>
+    <textarea id="copy-box" rows="4" hidden readonly style="flex-basis:100%"></textarea>
+  </div>
+
+  <div id="picker" hidden>
+    <input id="col-filter" type="search" placeholder="Find a column">
+    <button id="col-defaults">Default set</button>
+    <button id="col-all">All (no personal data)</button>
+    <button id="col-none">None</button>
+    <span id="col-count"></span>
+    <label class="rownum"><input type="checkbox" id="row-number" checked> Row Number column (far left, also in exports)</label>
+    <div class="picker-title">Shown columns: drag to reorder (or Alt + arrow keys)</div>
+    <div id="col-order"></div>
+    <div class="picker-title">All columns (tick to add at the end)</div>
+    <div id="col-list"></div>
+  </div>
+
+  <div id="tablewrap"><table id="grid"></table></div>
+
+  <!-- Official Tableau Extensions API library (loaded from a CDN for now; vendor it before customer use). -->
+  <script src="tableau.extensions.1.latest.min.js"></script>
+  <script src="export.js"></script>
+  <script src="details.js"></script>
+</body>
+</html>
